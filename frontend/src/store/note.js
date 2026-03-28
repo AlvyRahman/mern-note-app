@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+
 export const useNoteStore = create( (set) => ({
     notes: [],
     
@@ -9,7 +11,7 @@ export const useNoteStore = create( (set) => ({
         if(!newNote.title || !newNote.content) 
             return{success: false, message: "Title and content are required."};
 
-        const res = await fetch('/api/notes', {
+        const res = await fetch(`${API_BASE_URL}/api/notes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,21 +27,21 @@ export const useNoteStore = create( (set) => ({
     },
 
     fetchNotes: async () => {
-        const res = await fetch('/api/notes');
+        const res = await fetch(`${API_BASE_URL}/api/notes`);
         const data = await res.json();
 
-        set({ notes: data.data });
+        set({ notes: data.data || [] });
     },
 
     fetchNoteById: async (id) => {
-        const res = await fetch(`/api/notes/${id}`);
+        const res = await fetch(`${API_BASE_URL}/api/notes/${id}`);
         const data = await res.json();
 
         return data.data;
     },
 
     deleteNote: async (id) => {
-        const res = await fetch(`/api/notes/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/api/notes/${id}`, {
             method: 'DELETE'
         });
 
@@ -52,7 +54,7 @@ export const useNoteStore = create( (set) => ({
     },
 
     updateNote: async (id, updatedNote) => {
-        const res = await fetch(`/api/notes/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/api/notes/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
