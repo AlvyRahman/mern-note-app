@@ -8,32 +8,33 @@ import { useNavigate } from 'react-router-dom';
 
 const NoteCard = ({ note }) => {
     const { theme } = useTheme();
-    const {deleteNote} = useNoteStore();
+    const { deleteNote } = useNoteStore();
     const navigate = useNavigate();
 
     const handleCardClick = () => {
       navigate(`/edit/${note._id}`);
     };
 
-    const handleDelete = async (id) => {
-    const res = await deleteNote(id);
+    const handleDelete = async (id, e) => {
+      e.stopPropagation(); // Prevent event from bubbling up to the card
+      const res = await deleteNote(id);
 
-    if(res.success) {
-      toaster.create({
-        title: "Successfully deleted",
-        description: res.message,
-        type: "success",
-        closable: true,
-      });
-    } 
-    else {
-      toaster.create({
-        title: "Error",
-        description: res.message,
-        type: "error",
-        closable: true,
-      });
-    }
+      if(res.success) {
+        toaster.create({
+          title: "Successfully deleted",
+          description: res.message,
+          type: "success",
+          closable: true,
+        });
+      } 
+      else {
+        toaster.create({
+          title: "Error",
+          description: res.message,
+          type: "error",
+          closable: true,
+        });
+      }
   };
 
   return (
@@ -89,7 +90,7 @@ const NoteCard = ({ note }) => {
           cursor="pointer"
           opacity={0}  // hidden by default, shown on hover
           transition="opacity 0.2s"
-          onClick={() => handleDelete(note._id)}
+          onClick={(e) => handleDelete(note._id, e)}
         >
           <MdDelete size={18} />
         </Box>

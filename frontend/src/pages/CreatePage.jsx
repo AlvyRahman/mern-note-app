@@ -3,11 +3,12 @@ import { useColorModeValue } from '../components/ui/color-mode';
 import { Box, Container, Heading, VStack, HStack, Input, Button, Textarea} from '@chakra-ui/react';
 import { Toaster, toaster } from "../components/ui/toaster";
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export const CreatePage = () => {
   const { id } = useParams(); // Get id from URL
   const isEditMode = (id !== undefined); // Determine if we're in edit mode based on presence of id
+  const navigate = useNavigate();
 
   const colorOptions = [
     '#b45309', // Yellow
@@ -72,6 +73,8 @@ export const CreatePage = () => {
         });
       } 
       else {
+        navigate("/"); // Redirect to home page after successful creation
+        
         toaster.create({
           title: "Success",
           description: message,
