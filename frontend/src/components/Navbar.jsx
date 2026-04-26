@@ -25,7 +25,7 @@ export const Navbar = () => {
       {/* Center */}
       <Flex flex={1} justifyContent={"center"} alignItems={"center"}>
         <Text
-          fontSize={{ base: "30", sm: "40" }}
+          fontSize={{ base: "15px", sm: "20px" }}
           fontWeight={"bold"}
           textTransform={"uppercase"}
           textAlign={"center"}
