@@ -83,8 +83,3 @@ export const deleteNote = async (req, res) => {
         res.status(500).json({ success: false, message: "Server Error! Failed to delete" });
     }
 };
-
-// test
-export const testNote = (req, res) => {
-    res.send("TEST");
-};
