@@ -11,19 +11,31 @@ export const useNoteStore = create( (set) => ({
         if(!newNote.title || !newNote.content) 
             return{success: false, message: "Title and content are required."};
 
-        const res = await fetch(`${API_BASE_URL}/api/notes`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newNote)
-        });
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/notes`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newNote)
+            });
 
-        const data = await res.json();
+            const data = await res.json();
 
-        set((state) => ({ notes: [...state.notes, data.data] }));
+            if(!res.ok || !data.success) {
+                console.error("[createNote] failed:", res.status, data.message, data);
+                return { success: false, message: data.message || "Failed to create note." };
 
-        return { success: true, message: "Note created successfully." };
+            }
+
+            set((state) => ({ notes: [...state.notes, data.data] }));
+
+            return { success: true, message: "Note created successfully." };
+        }
+        catch (err) {
+            console.error("[createNote] Fetch failed:", err);
+            return { success: false, message: "Fetch failed" };
+        }
     },
 
     fetchNotes: async () => {
