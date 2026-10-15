@@ -66,24 +66,29 @@ export const useNoteStore = create( (set) => ({
     },
 
     updateNote: async (id, updatedNote) => {
-        const res = await fetch(`${API_BASE_URL}/api/notes/${id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedNote),
-        });
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/notes/${id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedNote),
+            });
 
-        const data = await res.json();
-        
-        if (!data.success) 
-            return { success: false, message: data.message };
+            const data = await res.json();
+            
+            if (!data.success) 
+                return { success: false, message: data.message };
 
-        // Update the UI state immediately without a page refresh
-        set((state) => ({
-            notes: state.notes.map((note) => (note._id === id ? data.data : note)),
-        }));
+            // Update the UI state immediately without a page refresh
+            set((state) => ({
+                notes: state.notes.map((note) => (note._id === id ? data.data : note)),
+            }));
 
-        return { success: true, message: "Note updated successfully" };
+            return { success: true, message: "Note updated successfully" };
+        } catch (err) {
+            console.error("[updateNote] Fetch failed:", err);
+            return { success: false, message: "Fetch failed" };
+        }
     }
 }));
